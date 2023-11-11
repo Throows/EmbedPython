@@ -18,9 +18,8 @@ int main(int argc, char **argv)
    std::cout << "------ EmbedPython ------" << std::endl;
 
    PyObject *gameModule, *scriptModule;
-   PyObject *func;
-   PyObject *setIntArgs, *value;
-   int result;
+   PyObject *func, *operObj;
+   PyObject *value, *resValue;
 
    Py_Initialize();
    PyRun_SimpleString("import os");
@@ -60,46 +59,32 @@ int main(int argc, char **argv)
    }
    Py_XDECREF(func);
 
-   SetMyInt(10);
-
-   func = PyObject_GetAttrString(scriptModule, "getMyInt");
-   if (func && PyCallable_Check(func)) {
-      value = PyObject_CallObject(func, NULL);
+   operObj = PyObject_GetAttrString(scriptModule, "Operation");
+   if (operObj && PyCallable_Check(operObj)) {
+      /*setIntArgs = PyTuple_New(1);
+      PyTuple_SetItem(setIntArgs, 0, PyLong_FromLong(2));*/
+      value = PyObject_CallObject(operObj, NULL);
       if (value != nullptr) {
-         result = PyLong_AsLong(value);
-         std::cout << "My int is : " << result << std::endl;
+         func = PyUnicode_DecodeFSDefault("GetResult");
+         if (func != nullptr) {
+            resValue = PyObject_CallMethodObjArgs(value, func, NULL);
+            if (resValue != nullptr) {
+               int result = PyLong_AsLong(resValue);
+               std::cout << "The result is : " << result << std::endl;
+               Py_DECREF(resValue);
+            }
+            Py_DECREF(func);
+         }
          Py_DECREF(value);
       } else {
          std::cout << "Error while calling the function" << std::endl;
          PyErr_Print();
       }
+      Py_DECREF(operObj);
    } else {
       std::cout << "Error while getting the function" << std::endl;
       PyErr_Print();
    }
-   Py_XDECREF(func);
-
-   PyObject *funcT = PyObject_GetAttrString(scriptModule, "setMyInt");
-   if (funcT && PyCallable_Check(funcT)) {
-      setIntArgs = PyTuple_New(1);
-      PyTuple_SetItem(setIntArgs, 0, PyLong_FromLong(2));
-      value = PyObject_CallObject(funcT, setIntArgs);
-      if (value != nullptr) {
-         result = PyLong_AsLong(value);
-         std::cout << "My new int is : " << result << std::endl;
-         Py_DECREF(value);
-      } else {
-         std::cout << "Error while calling the function" << std::endl;
-         PyErr_Print();
-      }
-      Py_XDECREF(setIntArgs);
-   } else {
-      std::cout << "Error while getting the function" << std::endl;
-      PyErr_Print();
-   }
-   Py_XDECREF(funcT);
-
-   std::cout << "Finaly my int is : " << GetMyInt() << std::endl;
 
    Py_XDECREF(gameModule);
    Py_XDECREF(scriptModule);

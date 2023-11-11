@@ -42,10 +42,17 @@ static PyObject *mygame_setMyInt(PyObject *self, PyObject *args)
     return PyLong_FromLong(MyNumber);
 }
 
+static PyObject *mygame_GetRandomInt(PyObject *self, PyObject *args)
+{
+    int number = rand() % 100;
+    return PyLong_FromLong(number);
+}
+
 static PyMethodDef mygame_methods[] = {
     {"version", mygame_version, METH_VARARGS, "Return some infos."},
     {"getMyInt", mygame_getMyInt, METH_VARARGS, "Return myInt."},
     {"setMyInt", mygame_setMyInt, METH_VARARGS, "Set and return myInt."},
+    {"GetRandomInt", mygame_GetRandomInt, METH_VARARGS, "Get a random Int."},
     {NULL, NULL, 0, NULL}};
 
 static struct PyModuleDef mygame_module = {
@@ -79,6 +86,8 @@ PyMODINIT_FUNC PyInit_mygame(void)
         Py_DECREF(m);
         return NULL;
     }
+
+    srand((unsigned)time(NULL));
 
     return m;
 }

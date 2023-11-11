@@ -3,7 +3,7 @@ add_requires("python 3.11", "spdlog")
 
 set_rundir("./bin/$(os)_$(arch)_$(mode)")
 set_targetdir("./bin/$(os)_$(arch)_$(mode)")
---set_warnings("all", "error")
+set_warnings("allextra")
 set_languages("c11", "cxx20")
 
 set_project("EmbedPython")
