@@ -1,15 +1,27 @@
 import sys
 import mygame
 
+data = {
+    "Name" : "Operation",
+    "Description" : "A simple operation class.",
+    "Version" : "1.0.0",
+    "Author" : "Romain Berthoule",
+    "Type" : "Addition Class",
+    "UUID" : 329130
+}
+
 class Operation:
 
     a: float
     b: float
     result: int
 
-    def __init__(self):
-        self.a = mygame.GetRandomInt()
-        self.b = mygame.GetRandomInt()
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+    def GetInfo(self) -> dict:
+        return self.data
 
     def Add(self):
         print("Calculating...")
