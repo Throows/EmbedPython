@@ -10,6 +10,8 @@ extern "C" {
 #define MYGAME_MODULE
 #include "mygame.hpp"
 
+#define VERSION "0.0.1"
+
 int MyNumber = 5;
 
 void SetMyInt(int num)
@@ -17,10 +19,13 @@ void SetMyInt(int num)
     MyNumber = num;
 }
 
-static PyObject* mygame_infos(PyObject* self, PyObject* args) {
-    MyNumber = 1;
-    std::string text = "Hello from C++! MyNumber = " + std::to_string(MyNumber);
-    return Py_BuildValue("s", text.c_str());
+int GetMyInt() 
+{
+    return MyNumber;
+}
+
+static PyObject* mygame_version(PyObject* self, PyObject* args) {
+    return Py_BuildValue("s", VERSION);
 }
 
 static PyObject *mygame_getMyInt(PyObject *self, PyObject *args)
@@ -38,7 +43,7 @@ static PyObject *mygame_setMyInt(PyObject *self, PyObject *args)
 }
 
 static PyMethodDef mygame_methods[] = {
-    {"infos", mygame_infos, METH_VARARGS, "Return some infos."},
+    {"version", mygame_version, METH_VARARGS, "Return some infos."},
     {"getMyInt", mygame_getMyInt, METH_VARARGS, "Return myInt."},
     {"setMyInt", mygame_setMyInt, METH_VARARGS, "Set and return myInt."},
     {NULL, NULL, 0, NULL}};
@@ -55,7 +60,7 @@ PyMODINIT_FUNC PyInit_mygame(void)
 {
 
     PyObject *m;
-    static void *PySpam_API[FUNC_NB];
+    static void *PyGame_API[FUNC_NB];
     PyObject *c_api_object;
 
     m = PyModule_Create(&mygame_module);
@@ -63,10 +68,11 @@ PyMODINIT_FUNC PyInit_mygame(void)
         return NULL;
 
     /* Initialize the C API pointer array */
-    PySpam_API[0] = (void *)SetMyInt;
+    PyGame_API[0] = (void *)SetMyInt;
+    PyGame_API[1] = (void *)GetMyInt;
 
     /* Create a Capsule containing the API pointer array's address */
-    c_api_object = PyCapsule_New((void *)PySpam_API, "mygame._C_API", NULL);
+    c_api_object = PyCapsule_New((void *)PyGame_API, "mygame._C_API", NULL);
 
     if (PyModule_AddObject(m, "_C_API", c_api_object) < 0) {
         Py_XDECREF(c_api_object);

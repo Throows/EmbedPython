@@ -27,3 +27,6 @@ import mygame
     
 def getMyInt() -> int:
     return mygame.getMyInt()
+
+def setMyInt(a: int):
+    return mygame.setMyInt(a)

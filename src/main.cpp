@@ -17,53 +17,92 @@ int main(int argc, char **argv)
 {
    std::cout << "------ EmbedPython ------" << std::endl;
 
-   PyObject *name, *objModule, *func;
-   PyObject /**objArgs,*/ *value;
+   PyObject *gameModule, *scriptModule;
+   PyObject *func;
+   PyObject *setIntArgs, *value;
    int result;
 
    Py_Initialize();
    PyRun_SimpleString("import os");
    PyRun_SimpleString("import sys");
    PyRun_SimpleString("sys.path.append(os.getcwd() + \"/scripts\")");
-   PyRun_SimpleString("import mygame");
-   name = PyUnicode_DecodeFSDefault("MyScript"); // MyScript is the name of the py file
-   objModule = PyImport_Import(name);
-   Py_DECREF(name);
+
+   gameModule = PyImport_ImportModule("mygame");
+   if (gameModule == nullptr) {
+      std::cout << "Error while importing the Game module\n";
+      PyErr_Print();
+      return 0;
+   }
 
    if (import_mygame() < 0) {
       printf("Error importing mygame module\n");
       return 0;
    }
 
-   PyRun_SimpleString("mygame.infos()");
-   SetMyInt(10);
+   scriptModule = PyImport_ImportModule("MyScript");
+   if (scriptModule == nullptr) {
+      std::cout << "Error while importing the Scripting module\n";
+      PyErr_Print();
+      return 0;
+   }
 
-   if (objModule != nullptr) {
-      func = PyObject_GetAttrString(objModule, "getMyInt");
-
-      if (func && PyCallable_Check(func)) {
-         //objArgs = PyTuple_New(1);
-         //PyTuple_SetItem(objArgs, 0, PyLong_FromLong(2));
-         value = PyObject_CallObject(func, NULL); // objArgs
-         if (value != nullptr) {
-            result = PyLong_AsLong(value);
-            std::cout << "My int is : " << result << std::endl;
-            Py_DECREF(value);
-         }
-         else {
-            std::cout << "Error while calling the function" << std::endl;
-            PyErr_Print();
-         }
+   // Game Info Module
+   func = PyObject_GetAttrString(gameModule, "version");
+   if (func && PyCallable_Check(func)) {
+      value = PyObject_CallObject(func, NULL);
+      if (value != nullptr) {
+         std::cout << "Game Version : " << PyUnicode_AsUTF8(value) << std::endl;
+         Py_DECREF(value);
       } else {
-         std::cout << "Error while getting the function" << std::endl;
+         std::cout << "Error while calling the function" << std::endl;
          PyErr_Print();
       }
-      Py_XDECREF(func);
+   }
+   Py_XDECREF(func);
+
+   SetMyInt(10);
+
+   func = PyObject_GetAttrString(scriptModule, "getMyInt");
+   if (func && PyCallable_Check(func)) {
+      value = PyObject_CallObject(func, NULL);
+      if (value != nullptr) {
+         result = PyLong_AsLong(value);
+         std::cout << "My int is : " << result << std::endl;
+         Py_DECREF(value);
+      } else {
+         std::cout << "Error while calling the function" << std::endl;
+         PyErr_Print();
+      }
    } else {
-      std::cout << "Error while importing the module" << std::endl;
+      std::cout << "Error while getting the function" << std::endl;
       PyErr_Print();
    }
-   Py_XDECREF(objModule);
+   Py_XDECREF(func);
+
+   PyObject *funcT = PyObject_GetAttrString(scriptModule, "setMyInt");
+   if (funcT && PyCallable_Check(funcT)) {
+      setIntArgs = PyTuple_New(1);
+      PyTuple_SetItem(setIntArgs, 0, PyLong_FromLong(2));
+      value = PyObject_CallObject(funcT, setIntArgs);
+      if (value != nullptr) {
+         result = PyLong_AsLong(value);
+         std::cout << "My new int is : " << result << std::endl;
+         Py_DECREF(value);
+      } else {
+         std::cout << "Error while calling the function" << std::endl;
+         PyErr_Print();
+      }
+      Py_XDECREF(setIntArgs);
+   } else {
+      std::cout << "Error while getting the function" << std::endl;
+      PyErr_Print();
+   }
+   Py_XDECREF(funcT);
+
+   std::cout << "Finaly my int is : " << GetMyInt() << std::endl;
+
+   Py_XDECREF(gameModule);
+   Py_XDECREF(scriptModule);
 
    return Py_FinalizeEx();
 }

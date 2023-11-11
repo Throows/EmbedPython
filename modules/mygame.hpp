@@ -4,17 +4,19 @@
 extern "C" {
 #endif
 
-#define FUNC_NB 1
+#define FUNC_NB 2
 
 #ifdef MYGAME_MODULE    // While Compiling the module
 
 static void SetMyInt(int num);
+static int GetMyInt();
 
 #else                   // While importing the module
 
 static void **Pymygame_API;
 
 #define SetMyInt (*(void (*)(int))Pymygame_API[0])
+#define GetMyInt (*(int (*)())Pymygame_API[1])
 
 static int import_mygame(void)
 {
