@@ -7,7 +7,7 @@ enum class Action;
 class PythonPlayer
 {
 public:
-    PythonPlayer(PyInterpreter *interpPython);
+    PythonPlayer();
     ~PythonPlayer();
 
     void SetupPlayer();
@@ -16,5 +16,5 @@ public:
     Action ChoseAction(Player *player, const char *scriptName);
 
 private:
-    PyObject *m_playerInstance;
+    std::vector<PyObject *> m_playersObject;
 };

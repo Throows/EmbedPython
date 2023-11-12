@@ -25,15 +25,12 @@ int main(int argc, char **argv)
    interpPython.Initialize();
 
    Player player("MyScript");
-   PythonPlayer pythonPlayer(&interpPython);
+   PythonPlayer pythonPlayer;
 
    player.SetupPlayer(&pythonPlayer);
 
    Action action = player.ChoseAction();
-   std::cout << "Action: " << static_cast<int>(action) << std::endl;
-
-   int code = 0;
-   //std::cin >> code;
+   
    interpPython.Uninitialize();
    return 0;
 }

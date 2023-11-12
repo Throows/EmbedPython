@@ -19,6 +19,5 @@ public:
 private:
     const char *m_scriptsPath;
     bool isInitialized = false;
-    std::vector<PyObject*> m_loadedModules;
     PyObject* m_gameModule;
 };

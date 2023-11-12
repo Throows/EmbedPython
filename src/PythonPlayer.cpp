@@ -17,6 +17,7 @@ void PythonPlayer::SetupPlayer()
 void PythonPlayer::CreatePlayer(Player *player, const char *scriptName)
 {
     PyObject *playerModule, *gameData;
+    PyObject *playerObjectAttr;
     playerModule = PyImport_ImportModule(scriptName);
     if (playerModule == nullptr) {
         std::cout << "Error while importing the " << scriptName << " module\n";
@@ -39,9 +40,10 @@ void PythonPlayer::CreatePlayer(Player *player, const char *scriptName)
             else if (keyStr == "Level")     player->SetLevel(PyLong_AsLong(value));
             else if (keyStr == "Experience") player->SetExperience(PyLong_AsLong(value));
             else std::cout << "Error while getting the " << keyStr << " attribute\n";
+
+            Py_DECREF(key);
+            Py_DECREF(value);
         }
-        Py_XDECREF(key);
-        Py_XDECREF(value);
         Py_DECREF(gameData);
     } else {
         std::cout << "Error while getting the PlayerData attribute\n";
@@ -49,37 +51,30 @@ void PythonPlayer::CreatePlayer(Player *player, const char *scriptName)
     }
     Py_DECREF(playerModule);
 
-    return;
+    playerObjectAttr = PyObject_GetAttrString(playerModule, "Player");
+    if (playerObjectAttr != nullptr && PyCallable_Check(playerObjectAttr)) {
+        PyObject *playerObject = PyObject_CallObject(playerObjectAttr, NULL);
+        if (playerObject != nullptr) {
+            this->m_playersObject.push_back(playerObject);
+        } else {
+            std::cout << "Error while calling the Player object\n";
+            PyErr_Print();
+        }
+        Py_DECREF(playerObjectAttr);
+    } else {
+        std::cout << "Error while getting the Player attribute\n";
+        PyErr_Print();
+    }
 }
 
 Action PythonPlayer::ChoseAction(Player *player, const char *scriptName)
 {
     Action action = Action::ERROR;
-    PyObject *playerModule, *playerObject, *actionFunc;
-    PyObject *playerObjectValue, *actionResult;
-    playerModule = PyImport_ImportModule(scriptName);
-    if (playerModule == nullptr) {
-        std::cout << "Error while importing the " << scriptName << " module\n";
-        return action;
-    }
-
-    playerObject = PyObject_GetAttrString(playerModule, "Player");
-    if (playerObject == nullptr || !PyCallable_Check(playerObject)) {
-        std::cout << "Error while getting the Player attribute\n";
-        PyErr_Print();
-        goto noPlayerObj;
-    }
-
-    playerObjectValue = PyObject_CallObject(playerObject, NULL);
-    if (playerObjectValue == nullptr) {
-        std::cout << "Error while calling the Player object\n";
-        PyErr_Print();
-        goto noPlayerObj;
-    }
+    PyObject *actionFunc, *actionResult;
 
     actionFunc = PyUnicode_DecodeFSDefault("ChoseAction");
     if (actionFunc != nullptr) {
-        actionResult = PyObject_CallMethodObjArgs(playerObjectValue, actionFunc, NULL);
+        actionResult = PyObject_CallMethodObjArgs(this->m_playersObject.at(0), actionFunc, NULL);
         if (actionResult != nullptr) {
             if (PyLong_Check(actionResult)) {
                 int actionRaw = PyLong_AsLong(actionResult);
@@ -98,11 +93,5 @@ Action PythonPlayer::ChoseAction(Player *player, const char *scriptName)
         std::cout << "Error while getting the ChoseAction function\n";
         PyErr_Print();
     }
-
-    Py_DECREF(playerObjectValue);
-noPlayerObj:
-    Py_DECREF(playerObject);
-noPlayerObjAttr:
-    Py_DECREF(playerModule);
     return action;
 }

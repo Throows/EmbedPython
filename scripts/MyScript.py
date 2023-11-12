@@ -19,7 +19,7 @@ class Player:
 
     def ChoseAction(self) -> int:
         randAction = random.randint(0, 3)
-        print("I chose action " + str(randAction))
+        print(PlayerData["Name"] + " chose action " + str(randAction))
         return randAction
     
     def DoNothing() -> bool:
