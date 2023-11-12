@@ -1,41 +1,43 @@
 import sys
 import mygame
+import random
 
-data = {
-    "Name" : "Operation",
-    "Description" : "A simple operation class.",
-    "Version" : "1.0.0",
-    "Author" : "Romain Berthoule",
-    "Type" : "Addition Class",
-    "UUID" : 329130
+PlayerData = {
+    "Name" : "Throows",
+    "Health" : 100,
+    "Damage" : 30,
+    "Armor" : 16,
+    "Speed" : 420,
+    "Level" : 0,
+    "Experience" : 0,
 }
 
-class Operation:
+class Player:
 
-    a: float
-    b: float
-    result: int
+    def GetInfo(self) -> str:
+        return PlayerData["Name"]
 
-    def __init__(self, a, b):
-        self.a = a
-        self.b = b
+    def ChoseAction(self) -> int:
+        randAction = random.randint(0, 3)
+        print("I chose action " + str(randAction))
+        return randAction
+    
+    def DoNothing() -> bool:
+        print("I'm doing nothing.")
+        return True
+    
+    def DoAttack() -> bool:
+        print("I'm doing an attack.")
+        return True
+    
+    def DoDefend() -> bool:
+        print("I'm defending.")
+        return True
+    
+    def DoRun() -> bool:
+        print("I'm running away.")
+        return True
 
-    def GetInfo(self) -> dict:
-        return self.data
-
-    def Add(self):
-        print("Calculating...")
-        self.result = self.b + self.a
-        return self.result
-
-    def SetNumber(self, a, b):
-        self.a = a
-        self.b = b
-
-    def GetResult(self) -> float: 
-        self.Add()
-        print("Result: " + str(self.result))
-        return self.result
 
 if __name__ == "__main__":
     print("This script is not meant to be run directly.")
