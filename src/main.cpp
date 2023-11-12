@@ -31,8 +31,20 @@ int main(int argc, char **argv)
    playerOne.SetupPlayer(&pythonPlayer);
    playerTwo.SetupPlayer(&pythonPlayer);
 
-   playerOne.ChoseAction();
-   playerTwo.ChoseAction();
+   while (playerOne.GetHealth() > 0 && playerTwo.GetHealth() > 0) {
+      Action actionOne = playerOne.ChoseAction();
+      playerOne.Play(actionOne, &playerTwo);
+      Action actionTwo = playerTwo.ChoseAction();
+      playerTwo.Play(actionTwo, &playerOne);
+   }
+
+   if (playerOne.GetHealth() <= 0) {
+      std::cout << "Player " << playerTwo.GetName() << " won ! (HP: " << playerTwo.GetHealth() << ")" << std::endl;
+   } else {
+      std::cout << "Player " << playerOne.GetName() << " won ! (HP: " << playerOne.GetHealth() << ")" << std::endl;
+   }
+
+   std::cout << "------ End of EmbedPython ------" << std::endl;
 
    interpPython.Uninitialize();
    return 0;

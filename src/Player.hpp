@@ -38,6 +38,8 @@ public:
 
     Action ChoseAction();
 
+    void Play(Action action, Player *player);
+
 private:
     const char* m_scriptName;
     int m_playerID = -1;

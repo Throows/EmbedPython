@@ -74,6 +74,118 @@ Action PythonPlayer::ChoseAction(Player *player)
     return action;
 }
 
+void PythonPlayer::Attack(Player *player)
+{
+    int playerID = player->GetPlayerID();
+    if (playerID == -1) return;
+    PyObject *playerModule = this->m_playersObject[playerID];
+    PyObject *attackFunc, *attackResult;
+    attackFunc = PyUnicode_DecodeFSDefault("DoAttack");
+    if (attackFunc != nullptr) {
+        attackResult = PyObject_CallMethodObjArgs(playerModule, attackFunc, NULL);
+        if (attackResult != nullptr) {
+            if (PyBool_Check(attackResult)) {
+                bool succed = PyLong_AsLong(attackResult);
+            } else {
+                std::cout << "Error while getting the Attack function\n";
+                PyErr_Print();
+            }
+            Py_DECREF(attackResult);
+        } else {
+            std::cout << "Error while getting the Attack function\n";
+            PyErr_Print();
+        }
+        Py_DECREF(attackFunc);
+    } else {
+        std::cout << "Error while getting the Attack function\n";
+        PyErr_Print();
+    }
+}
+
+void PythonPlayer::Defend(Player *player)
+{
+    int playerID = player->GetPlayerID();
+    if (playerID == -1) return;
+    PyObject *playerModule = this->m_playersObject[playerID];
+    PyObject *attackFunc, *attackResult;
+    attackFunc = PyUnicode_DecodeFSDefault("DoDefend");
+    if (attackFunc != nullptr) {
+        attackResult = PyObject_CallMethodObjArgs(playerModule, attackFunc, NULL);
+        if (attackResult != nullptr) {
+            if (PyBool_Check(attackResult)) {
+                bool succed = PyLong_AsLong(attackResult);
+            } else {
+                std::cout << "Error while getting the Attack function\n";
+                PyErr_Print();
+            }
+            Py_DECREF(attackResult);
+        } else {
+            std::cout << "Error while getting the Attack function\n";
+            PyErr_Print();
+        }
+        Py_DECREF(attackFunc);
+    } else {
+        std::cout << "Error while getting the Attack function\n";
+        PyErr_Print();
+    }
+}
+
+void PythonPlayer::Run(Player *player)
+{
+    int playerID = player->GetPlayerID();
+    if (playerID == -1) return;
+    PyObject *playerModule = this->m_playersObject[playerID];
+    PyObject *attackFunc, *attackResult;
+    attackFunc = PyUnicode_DecodeFSDefault("DoRun");
+    if (attackFunc != nullptr) {
+        attackResult = PyObject_CallMethodObjArgs(playerModule, attackFunc, NULL);
+        if (attackResult != nullptr) {
+            if (PyBool_Check(attackResult)) {
+                bool succed = PyLong_AsLong(attackResult);
+            } else {
+                std::cout << "Error while getting the Attack function\n";
+                PyErr_Print();
+            }
+            Py_DECREF(attackResult);
+        } else {
+            std::cout << "Error while getting the Attack function\n";
+            PyErr_Print();
+        }
+        Py_DECREF(attackFunc);
+    } else {
+        std::cout << "Error while getting the Attack function\n";
+        PyErr_Print();
+    }
+}
+
+void PythonPlayer::Nothing(Player *player)
+{
+    int playerID = player->GetPlayerID();
+    if (playerID == -1) return;
+    PyObject *playerModule = this->m_playersObject[playerID];
+    PyObject *attackFunc, *attackResult;
+    attackFunc = PyUnicode_DecodeFSDefault("DoNothing");
+    if (attackFunc != nullptr) {
+        attackResult = PyObject_CallMethodObjArgs(playerModule, attackFunc, NULL);
+        if (attackResult != nullptr) {
+            if (PyBool_Check(attackResult)) {
+                bool succed = PyLong_AsLong(attackResult);
+            } else {
+                std::cout << "Error while getting the Attack function\n";
+                PyErr_Print();
+            }
+            Py_DECREF(attackResult);
+        } else {
+            std::cout << "Error while getting the Attack function\n";
+            PyErr_Print();
+        }
+        Py_DECREF(attackFunc);
+    } else {
+        std::cout << "Error while getting the Attack function\n";
+        PyErr_Print();
+    }
+}
+
 void PythonPlayer::SetPlayerData(Player *player)
 {
     int playerID = player->GetPlayerID();

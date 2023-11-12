@@ -7,14 +7,15 @@ class Player:
     PlayerData: dict
 
     def __init__(self):
+        """
+        This is the base Stats for the Player (Constant values).
+        """
         self.PlayerData = {
             "Name" : "Soldier",
-            "Health" : 320,
+            "Health" : 170,
             "Damage" : 15,
-            "Armor" : 60,
+            "Armor" : 30,
             "Speed" : 350,
-            "Level" : 0,
-            "Experience" : 0,
         }
 
     def GetInfo(self) -> str:
@@ -22,23 +23,22 @@ class Player:
 
     def ChoseAction(self) -> int:
         randAction = random.randint(0, 3)
-        print(self.PlayerData["Name"] + " chose action " + str(randAction))
         return randAction
     
     def DoNothing(self) -> bool:
-        print("I'm doing nothing.")
+        print(self.PlayerData["Name"] + " -> I'm doing nothing.")
         return True
     
     def DoAttack(self) -> bool:
-        print("I'm doing an attack.")
+        print(self.PlayerData["Name"] + " -> I'm doing a Small attack !")
         return True
     
     def DoDefend(self) -> bool:
-        print("I'm defending.")
+        print(self.PlayerData["Name"] + " -> I'm defending.")
         return True
     
     def DoRun(self) -> bool:
-        print("I'm running away.")
+        print(self.PlayerData["Name"] + " -> I'm running away.")
         return True
 
 

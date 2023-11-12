@@ -15,6 +15,10 @@ public:
     void SetPlayerData(Player *player);
 
     Action ChoseAction(Player *player);
+    void Attack(Player *player);
+    void Defend(Player *player);
+    void Run(Player *player);
+    void Nothing(Player *player);
 
 private:
     std::vector<PyObject *> m_playersObject;
