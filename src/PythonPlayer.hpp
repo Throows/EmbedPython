@@ -11,9 +11,10 @@ public:
     ~PythonPlayer();
 
     void SetupPlayer();
-    void CreatePlayer(Player *player, const char *scriptName);
+    int CreatePlayer(Player *player, const char *scriptName);
+    void SetPlayerData(Player *player);
 
-    Action ChoseAction(Player *player, const char *scriptName);
+    Action ChoseAction(Player *player);
 
 private:
     std::vector<PyObject *> m_playersObject;

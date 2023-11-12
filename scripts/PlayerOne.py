@@ -2,39 +2,42 @@ import sys
 import mygame
 import random
 
-PlayerData = {
-    "Name" : "Throows",
-    "Health" : 100,
-    "Damage" : 30,
-    "Armor" : 16,
-    "Speed" : 420,
-    "Level" : 0,
-    "Experience" : 0,
-}
-
 class Player:
 
+    PlayerData: dict
+
+    def __init__(self):
+        self.PlayerData = {
+            "Name" : "Throows",
+            "Health" : 100,
+            "Damage" : 30,
+            "Armor" : 16,
+            "Speed" : 420,
+            "Level" : 0,
+            "Experience" : 0,
+        }
+
     def GetInfo(self) -> str:
-        return PlayerData["Name"]
+        return self.PlayerData["Name"]
 
     def ChoseAction(self) -> int:
         randAction = random.randint(0, 3)
-        print(PlayerData["Name"] + " chose action " + str(randAction))
+        print(self.PlayerData["Name"] + " chose action " + str(randAction))
         return randAction
     
-    def DoNothing() -> bool:
+    def DoNothing(self) -> bool:
         print("I'm doing nothing.")
         return True
     
-    def DoAttack() -> bool:
+    def DoAttack(self) -> bool:
         print("I'm doing an attack.")
         return True
     
-    def DoDefend() -> bool:
+    def DoDefend(self) -> bool:
         print("I'm defending.")
         return True
     
-    def DoRun() -> bool:
+    def DoRun(self) -> bool:
         print("I'm running away.")
         return True
 

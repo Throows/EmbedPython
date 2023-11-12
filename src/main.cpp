@@ -24,13 +24,16 @@ int main(int argc, char **argv)
    PyInterpreter interpPython = PyInterpreter(scriptPath.c_str());
    interpPython.Initialize();
 
-   Player player("MyScript");
+   Player playerOne("PlayerOne");
+   Player playerTwo("PlayerTwo");
    PythonPlayer pythonPlayer;
 
-   player.SetupPlayer(&pythonPlayer);
+   playerOne.SetupPlayer(&pythonPlayer);
+   playerTwo.SetupPlayer(&pythonPlayer);
 
-   Action action = player.ChoseAction();
-   
+   playerOne.ChoseAction();
+   playerTwo.ChoseAction();
+
    interpPython.Uninitialize();
    return 0;
 }

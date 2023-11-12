@@ -28,6 +28,7 @@ public:
     void SetExperience(int xp) { this->m_experience = xp; };
 
     std::string GetName() { return m_name; };
+    const int& GetPlayerID() { return m_playerID; };
     int GetHealth() { return m_health; };
     int GetDamage() { return m_damage; };
     int GetArmor() { return m_armor; };
@@ -39,6 +40,7 @@ public:
 
 private:
     const char* m_scriptName;
+    int m_playerID = -1;
     std::string m_name;
     int m_health;
     int m_damage;

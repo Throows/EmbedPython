@@ -14,48 +14,23 @@ void PythonPlayer::SetupPlayer()
 {
 }
 
-void PythonPlayer::CreatePlayer(Player *player, const char *scriptName)
+int PythonPlayer::CreatePlayer(Player *player, const char *scriptName)
 {
-    PyObject *playerModule, *gameData;
-    PyObject *playerObjectAttr;
+    PyObject *playerModule, *playerObjectAttr, *playerObject;
+    int playerID = -1;
     playerModule = PyImport_ImportModule(scriptName);
     if (playerModule == nullptr) {
         std::cout << "Error while importing the " << scriptName << " module\n";
         PyErr_Print();
-        return;
+        return playerID;
     }
-
-    gameData = PyObject_GetAttrString(playerModule, "PlayerData");
-    if (gameData && PyDict_Check(gameData)) {
-        PyObject *key, *value;
-        Py_ssize_t pos = 0;
-
-        while (PyDict_Next(gameData, &pos, &key, &value)) {
-            std::string keyStr = PyUnicode_AsUTF8(key);
-            if (keyStr == "Name")           player->SetName(PyUnicode_AsUTF8(value));
-            else if (keyStr == "Health")    player->SetHealth(PyLong_AsLong(value));
-            else if (keyStr == "Damage")    player->SetDamage(PyLong_AsLong(value));
-            else if (keyStr == "Armor")     player->SetArmor(PyLong_AsLong(value));
-            else if (keyStr == "Speed")     player->SetSpeed(PyLong_AsLong(value));
-            else if (keyStr == "Level")     player->SetLevel(PyLong_AsLong(value));
-            else if (keyStr == "Experience") player->SetExperience(PyLong_AsLong(value));
-            else std::cout << "Error while getting the " << keyStr << " attribute\n";
-
-            Py_DECREF(key);
-            Py_DECREF(value);
-        }
-        Py_DECREF(gameData);
-    } else {
-        std::cout << "Error while getting the PlayerData attribute\n";
-        PyErr_Print();
-    }
-    Py_DECREF(playerModule);
 
     playerObjectAttr = PyObject_GetAttrString(playerModule, "Player");
     if (playerObjectAttr != nullptr && PyCallable_Check(playerObjectAttr)) {
-        PyObject *playerObject = PyObject_CallObject(playerObjectAttr, NULL);
+        playerObject = PyObject_CallObject(playerObjectAttr, NULL);
         if (playerObject != nullptr) {
             this->m_playersObject.push_back(playerObject);
+            playerID = this->m_playersObject.size() - 1;
         } else {
             std::cout << "Error while calling the Player object\n";
             PyErr_Print();
@@ -65,16 +40,19 @@ void PythonPlayer::CreatePlayer(Player *player, const char *scriptName)
         std::cout << "Error while getting the Player attribute\n";
         PyErr_Print();
     }
+    Py_DECREF(playerModule);
+    return playerID;
 }
 
-Action PythonPlayer::ChoseAction(Player *player, const char *scriptName)
+Action PythonPlayer::ChoseAction(Player *player)
 {
     Action action = Action::ERROR;
     PyObject *actionFunc, *actionResult;
 
     actionFunc = PyUnicode_DecodeFSDefault("ChoseAction");
+    int id = player->GetPlayerID();
     if (actionFunc != nullptr) {
-        actionResult = PyObject_CallMethodObjArgs(this->m_playersObject.at(0), actionFunc, NULL);
+        actionResult = PyObject_CallMethodObjArgs(this->m_playersObject[id], actionFunc, NULL);
         if (actionResult != nullptr) {
             if (PyLong_Check(actionResult)) {
                 int actionRaw = PyLong_AsLong(actionResult);
@@ -94,4 +72,36 @@ Action PythonPlayer::ChoseAction(Player *player, const char *scriptName)
         PyErr_Print();
     }
     return action;
+}
+
+void PythonPlayer::SetPlayerData(Player *player)
+{
+    int playerID = player->GetPlayerID();
+    if (playerID == -1) return;
+    PyObject *playerModule = this->m_playersObject[playerID];
+    PyObject *gameDataDict;
+    gameDataDict = PyObject_GetAttrString(playerModule, "PlayerData");
+    if (gameDataDict && PyDict_Check(gameDataDict)) {
+        PyObject *key, *value;
+        Py_ssize_t pos = 0;
+
+        while (PyDict_Next(gameDataDict, &pos, &key, &value)) {
+            std::string keyStr = PyUnicode_AsUTF8(key);
+            if (keyStr == "Name")           player->SetName(PyUnicode_AsUTF8(value));
+            else if (keyStr == "Health")    player->SetHealth(PyLong_AsLong(value));
+            else if (keyStr == "Damage")    player->SetDamage(PyLong_AsLong(value));
+            else if (keyStr == "Armor")     player->SetArmor(PyLong_AsLong(value));
+            else if (keyStr == "Speed")     player->SetSpeed(PyLong_AsLong(value));
+            else if (keyStr == "Level")     player->SetLevel(PyLong_AsLong(value));
+            else if (keyStr == "Experience") player->SetExperience(PyLong_AsLong(value));
+            else std::cout << "Error while getting the " << keyStr << " attribute\n";
+
+            Py_DECREF(key);
+            Py_DECREF(value);
+        }
+        Py_DECREF(gameDataDict);
+    } else {
+        std::cout << "Error while getting the PlayerData attribute\n";
+        PyErr_Print();
+    }
 }
