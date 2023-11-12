@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,34 +13,11 @@ extern "C" {
 
 #define VERSION "0.0.1"
 
-int MyNumber = 5;
+PythonPlayer *pythonPlayers;
 
-void SetMyInt(int num)
+static PyObject* mygame_version(PyObject* self, PyObject* args)
 {
-    MyNumber = num;
-}
-
-int GetMyInt() 
-{
-    return MyNumber;
-}
-
-static PyObject* mygame_version(PyObject* self, PyObject* args) {
     return Py_BuildValue("s", VERSION);
-}
-
-static PyObject *mygame_getMyInt(PyObject *self, PyObject *args)
-{
-    return PyLong_FromLong(MyNumber);
-}
-
-static PyObject *mygame_setMyInt(PyObject *self, PyObject *args)
-{
-    int num;
-    if (!PyArg_ParseTuple(args, "i", &num))
-        return NULL;
-    SetMyInt(num);
-    return PyLong_FromLong(MyNumber);
 }
 
 static PyObject *mygame_GetRandomInt(PyObject *self, PyObject *args)
@@ -48,11 +26,20 @@ static PyObject *mygame_GetRandomInt(PyObject *self, PyObject *args)
     return PyLong_FromLong(number);
 }
 
+static PyObject* mygame_Say(PyObject* self, PyObject* args)
+{
+    const char* text;
+    if (!PyArg_ParseTuple(args, "s", &text))
+        return NULL;
+
+    std::cout << text << std::endl;
+    //Py_RETURN_NONE;
+}
+
 static PyMethodDef mygame_methods[] = {
     {"version", mygame_version, METH_VARARGS, "Return some infos."},
-    {"getMyInt", mygame_getMyInt, METH_VARARGS, "Return myInt."},
-    {"setMyInt", mygame_setMyInt, METH_VARARGS, "Set and return myInt."},
     {"GetRandomInt", mygame_GetRandomInt, METH_VARARGS, "Get a random Int."},
+    {"Say", mygame_Say, METH_VARARGS, "Say something"},
     {NULL, NULL, 0, NULL}};
 
 static struct PyModuleDef mygame_module = {
@@ -65,7 +52,6 @@ static struct PyModuleDef mygame_module = {
 
 PyMODINIT_FUNC PyInit_mygame(void)
 {
-
     PyObject *m;
     static void *PyGame_API[FUNC_NB];
     PyObject *c_api_object;
@@ -75,8 +61,7 @@ PyMODINIT_FUNC PyInit_mygame(void)
         return NULL;
 
     /* Initialize the C API pointer array */
-    PyGame_API[0] = (void *)SetMyInt;
-    PyGame_API[1] = (void *)GetMyInt;
+    PyGame_API[0] = (void *)RegisterPlayers;
 
     /* Create a Capsule containing the API pointer array's address */
     c_api_object = PyCapsule_New((void *)PyGame_API, "mygame._C_API", NULL);
@@ -95,3 +80,8 @@ PyMODINIT_FUNC PyInit_mygame(void)
 #ifdef __cplusplus
 }
 #endif
+
+void RegisterPlayers(PythonPlayer *players)
+{
+    pythonPlayers = players;
+}

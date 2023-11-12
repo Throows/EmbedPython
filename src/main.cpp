@@ -46,6 +46,7 @@ int main(int argc, char **argv)
 
    std::cout << "------ End of EmbedPython ------" << std::endl;
 
+   pythonPlayer.UninitializePlayer();
    interpPython.Uninitialize();
    return 0;
 }

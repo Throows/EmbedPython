@@ -52,8 +52,6 @@ void PyInterpreter::Uninitialize()
     Py_FinalizeEx();
 }
 
-
-
 void PyInterpreter::LoadCModule(PyObject *module, const char *moduleName)
 {   
     this->LoadScriptModule(module, moduleName);

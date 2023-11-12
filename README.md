@@ -8,4 +8,6 @@ Todo :
 - [ ] Detect Number of player (By presence of scripts in the folder)
 - [ ] Add player quotes and actions
 - [ ] Add player interactions
+- [ ] Add Events
+
 etc 

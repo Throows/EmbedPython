@@ -1,5 +1,8 @@
 #include "Player.hpp"
+
 #include <iostream>
+
+#include "PythonPlayer.hpp"
 
 Player::Player(const char *scriptName) : m_scriptName(scriptName)
 {

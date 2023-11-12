@@ -16,7 +16,7 @@ target("mygame")
     add_rules("python.library")
     add_ldflags(pythonLib)
     add_includedirs(pythonInclude)
-    add_files("modules/mygame.cpp")
+    add_files("src/mygame.cpp")
     add_packages("python")
 target_end()
 

@@ -1,8 +1,6 @@
 #pragma once
 #include "PyInterpreter.hpp"
-
-class Player;
-enum class Action;
+#include "Player.hpp"
 
 class PythonPlayer
 {
@@ -11,6 +9,7 @@ public:
     ~PythonPlayer();
 
     void SetupPlayer();
+    void UninitializePlayer();
     int CreatePlayer(Player *player, const char *scriptName);
     void SetPlayerData(Player *player);
 

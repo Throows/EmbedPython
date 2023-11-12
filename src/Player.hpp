@@ -1,6 +1,7 @@
 #pragma once 
 #include <string>
-#include "PythonPlayer.hpp"
+
+class PythonPlayer;
 
 enum class Action
 {
