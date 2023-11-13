@@ -21,7 +21,7 @@ static PyObject* mygame_version(PyObject* self, PyObject* args)
 
 static PyObject *mygame_GetRandomInt(PyObject *self, PyObject *args)
 {
-    int number = rand() % 100;
+    int number = rand() % 4;
     return PyLong_FromLong(number);
 }
 

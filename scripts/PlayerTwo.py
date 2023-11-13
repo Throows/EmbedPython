@@ -1,6 +1,5 @@
 import sys
 import mygame
-import random
 
 PlayerData = {
     "Name" : "Soldier",
@@ -14,15 +13,14 @@ def OnCreatePlayer():
     return PlayerData
 
 def OnChoseAction() -> int:
-    randAction = random.randint(0, 3)
-    return randAction
+    return mygame.GetRandomInt()
     
 def DoNothing() -> bool:
     mygame.Say("I'm doing nothing.")
     return True
     
 def DoAttack() -> bool:
-    mygame.Say("I'm doing a Small attack !")
+    mygame.Say("I'm doing a super attack !")
     return True
     
 def DoDefend() -> bool:

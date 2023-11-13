@@ -34,10 +34,11 @@ void Application::Uninitialize()
 void Application::Run()
 {
     Action playerAction;
+    int previousPlayer = this->players.size() - 1;
     while (players[0]->GetHealth() > 0 && players[1]->GetHealth() > 0) {
         playerAction = players[this->currentPlayer]->ChoseAction();
-        int previous = (this->currentPlayer - 1) % 2;
-        players[this->currentPlayer]->Play(playerAction, players[1]);
+        players[this->currentPlayer]->Play(playerAction, players[previousPlayer]);
+        previousPlayer = this->currentPlayer;
         this->currentPlayer++;
         this->currentPlayer%=2;
     }
