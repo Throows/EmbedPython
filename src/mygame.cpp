@@ -33,7 +33,7 @@ static PyObject* mygame_Say(PyObject* self, PyObject* args)
         return NULL;
 
     std::cout << text << std::endl;
-    //Py_RETURN_NONE;
+    Py_RETURN_NONE;
 }
 
 static PyMethodDef mygame_methods[] = {

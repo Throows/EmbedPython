@@ -1,7 +1,6 @@
 import sys
 import mygame
 import random
-import time
 
 def OnCreatePlayer():
     PlayerData = {
@@ -18,24 +17,23 @@ def OnChoseAction() -> int:
     return randAction
     
 def DoNothing() -> bool:
-    #time.sleep(5)
-    #mygame.Say("2 - I'm doing nothing.")
-    print("2 - I'm doing nothing.")
+    mygame.Say("2 - I'm doing nothing.")
+    #print("2 - I'm doing nothing.")
     return True
     
 def DoAttack() -> bool:
-    #mygame.Say("2 - I'm doing a Small attack !")
-    print("2 - I'm doing a Small attack !")
+    mygame.Say("2 - I'm doing a Small attack !")
+    #print("2 - I'm doing a Small attack !")
     return True
     
 def DoDefend() -> bool:
-    #mygame.Say("2 - I'm defending.")
-    print("2 - I'm defending.")
+    mygame.Say("2 - I'm defending.")
+    #print("2 - I'm defending.")
     return True
     
 def DoRun() -> bool:
-    #mygame.Say("2 - I'm running away.")
-    print("2 - I'm running away.")
+    mygame.Say("2 - I'm running away.")
+    #print("2 - I'm running away.")
     return True
 
 if __name__ == "__main__":

@@ -29,9 +29,9 @@ int PythonPlayer::CreatePlayer(Player *player, const char *scriptName)
         PyErr_Print();
         return playerID;
     }
-    Py_INCREF(playerModule);
     this->m_playersObject.push_back(playerModule);
     playerID = this->m_playersObject.size() - 1;
+    Py_INCREF(this->m_playersObject[playerID]);
     return playerID;
 }
 
@@ -58,11 +58,11 @@ Action PythonPlayer::ChoseAction(Player *player)
             std::cout << "Error while getting the ChoseAction function\n";
             PyErr_Print();
         }
-        Py_DECREF(actionFunc);
     } else {
         std::cout << "Error while getting the ChoseAction function\n";
         PyErr_Print();
     }
+    Py_XDECREF(actionFunc);
     return action;
 }
 
@@ -73,7 +73,7 @@ void PythonPlayer::Attack(Player *player)
 
     PyObject *attackFunc, *attackResult;
     attackFunc = PyObject_GetAttrString(this->m_playersObject[playerID], "DoAttack");
-    if (attackFunc != nullptr) {
+    if (attackFunc != nullptr && PyCallable_Check(attackFunc)) {
         attackResult = PyObject_CallObject(attackFunc, NULL);
         if (attackResult != nullptr) {
             if (PyBool_Check(attackResult)) {
@@ -87,11 +87,11 @@ void PythonPlayer::Attack(Player *player)
             std::cout << "Error while getting the Attack function\n";
             PyErr_Print();
         }
-        Py_DECREF(attackFunc);
     } else {
         std::cout << "Error while getting the Attack function\n";
         PyErr_Print();
     }
+    Py_XDECREF(attackFunc);
 }
 
 void PythonPlayer::Defend(Player *player)
@@ -101,7 +101,7 @@ void PythonPlayer::Defend(Player *player)
     
     PyObject *defendFunc, *defendResult;
     defendFunc = PyObject_GetAttrString(this->m_playersObject[playerID], "DoDefend");
-    if (defendFunc != nullptr) {
+    if (defendFunc != nullptr && PyCallable_Check(defendFunc)) {
         defendResult = PyObject_CallObject(defendFunc, NULL);
         if (defendResult != nullptr) {
             if (PyBool_Check(defendResult)) {
@@ -115,11 +115,11 @@ void PythonPlayer::Defend(Player *player)
             std::cout << "Error while getting the Defend function\n";
             PyErr_Print();
         }
-        Py_DECREF(defendFunc);
     } else {
         std::cout << "Error while getting the Defend function\n";
         PyErr_Print();
     }
+    Py_XDECREF(defendFunc);
 }
 
 void PythonPlayer::Run(Player *player)
@@ -129,7 +129,7 @@ void PythonPlayer::Run(Player *player)
 
     PyObject *runFunc, *runResult;
     runFunc = PyObject_GetAttrString(this->m_playersObject[playerID], "DoRun");
-    if (runFunc != nullptr) {
+    if (runFunc != nullptr && PyCallable_Check(runFunc)) {
         runResult = PyObject_CallObject(runFunc, NULL);
         if (runResult != nullptr) {
             if (PyBool_Check(runResult)) {
@@ -143,11 +143,11 @@ void PythonPlayer::Run(Player *player)
             std::cout << "Error while getting the Run function\n";
             PyErr_Print();
         }
-        Py_DECREF(runFunc);
     } else {
         std::cout << "Error while getting the Run function\n";
         PyErr_Print();
     }
+    Py_XDECREF(runFunc);
 }
 
 void PythonPlayer::Nothing(Player *player)
@@ -157,7 +157,7 @@ void PythonPlayer::Nothing(Player *player)
 
     PyObject *nothingFunc, *nothingResult;
     nothingFunc = PyObject_GetAttrString(this->m_playersObject[playerID], "DoNothing");
-    if (nothingFunc != nullptr) {
+    if (nothingFunc != nullptr && PyCallable_Check(nothingFunc)) {
         nothingResult = PyObject_CallObject(nothingFunc, NULL);
         if (nothingResult != nullptr) {
             if (PyBool_Check(nothingResult)) {
@@ -171,11 +171,11 @@ void PythonPlayer::Nothing(Player *player)
             std::cout << "Error while getting the Nothing function\n";
             PyErr_Print();
         }
-        Py_DECREF(nothingFunc);
     } else {
         std::cout << "Error while getting the Nothing function\n";
         PyErr_Print();
     }
+    Py_XDECREF(nothingFunc);
 }
 
 void PythonPlayer::SetPlayerData(Player *player)
@@ -206,9 +206,9 @@ void PythonPlayer::SetPlayerData(Player *player)
             std::cout << "Error while getting the PlayerData function\n";
             PyErr_Print();
         }
-        Py_DECREF(playerStatFunc);
     } else {
         std::cout << "Error while getting the PlayerData attribute\n";
         PyErr_Print();
     }
+    Py_XDECREF(playerStatFunc);
 }
