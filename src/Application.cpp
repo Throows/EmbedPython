@@ -1,8 +1,12 @@
 #include "Application.hpp"
+#include "mygame.hpp"
 #include <iostream>
+
+Application *appInstance = nullptr;
 
 Application::Application(const char *scriptPath) : interpPython(scriptPath)
 {
+    appInstance = this;
 }
 
 Application::~Application()
@@ -31,14 +35,20 @@ void Application::Run()
 {
     Action playerAction;
     while (players[0]->GetHealth() > 0 && players[1]->GetHealth() > 0) {
-        playerAction = players[0]->ChoseAction();
-        players[0]->Play(playerAction, players[1]);
-        playerAction = players[1]->ChoseAction();
-        players[1]->Play(playerAction, players[0]);
+        playerAction = players[this->currentPlayer]->ChoseAction();
+        int previous = (this->currentPlayer - 1) % 2;
+        players[this->currentPlayer]->Play(playerAction, players[1]);
+        this->currentPlayer++;
+        this->currentPlayer%=2;
     }
 
     if (players[0]->GetHealth() <= 0)
         std::cout << "Player " << players[1]->GetName() << " won ! (HP: " << players[1]->GetHealth() << ")" << std::endl;
     else
         std::cout << "Player " << players[0]->GetName() << " won ! (HP: " << players[0]->GetHealth() << ")" << std::endl;
+}
+
+std::string Application::GetPlayingPlayerName()
+{
+    return players[this->currentPlayer]->GetName();
 }

@@ -10,10 +10,9 @@ extern "C" {
 
 #define MYGAME_MODULE
 #include "mygame.hpp"
+#include "Application.hpp"
 
 #define VERSION "0.0.1"
-
-PythonPlayer *pythonPlayers;
 
 static PyObject* mygame_version(PyObject* self, PyObject* args)
 {
@@ -31,8 +30,8 @@ static PyObject* mygame_Say(PyObject* self, PyObject* args)
     const char* text;
     if (!PyArg_ParseTuple(args, "s", &text))
         return NULL;
-
-    std::cout << text << std::endl;
+        
+    std::cout << appInstance->GetPlayingPlayerName() << " -> " << text << std::endl;
     Py_RETURN_NONE;
 }
 
@@ -61,7 +60,7 @@ PyMODINIT_FUNC PyInit_mygame(void)
         return NULL;
 
     /* Initialize the C API pointer array */
-    PyGame_API[0] = (void *)RegisterPlayers;
+    //PyGame_API[0] = (void *);
 
     /* Create a Capsule containing the API pointer array's address */
     c_api_object = PyCapsule_New((void *)PyGame_API, "mygame._C_API", NULL);
@@ -80,8 +79,3 @@ PyMODINIT_FUNC PyInit_mygame(void)
 #ifdef __cplusplus
 }
 #endif
-
-void RegisterPlayers(PythonPlayer *players)
-{
-    pythonPlayers = players;
-}

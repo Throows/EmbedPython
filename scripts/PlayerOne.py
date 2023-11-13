@@ -2,14 +2,15 @@ import sys
 import mygame
 import random
 
+PlayerData = {
+    "Name" : "Throows",
+    "Health" : 100,
+    "Damage" : 30,
+    "Armor" : 16,
+    "Speed" : 420,
+}
+
 def OnCreatePlayer():
-    PlayerData = {
-        "Name" : "Throows",
-        "Health" : 100,
-        "Damage" : 30,
-        "Armor" : 16,
-        "Speed" : 420,
-    }
     return PlayerData
 
 def OnChoseAction() -> int:
@@ -17,23 +18,19 @@ def OnChoseAction() -> int:
     return randAction
     
 def DoNothing() -> bool:
-    mygame.Say("1 - I'm doing nothing.")
-    #print("1 - I'm doing nothing.")
+    mygame.Say("I'm doing nothing.")
     return True
     
 def DoAttack() -> bool:
-    mygame.Say("1 - I'm doing a Small attack !")
-    #print("1 - I'm doing a Small attack !")
+    mygame.Say("I'm doing a Small attack !")
     return True
     
 def DoDefend() -> bool:
-    mygame.Say("1 - I'm defending.")
-    #print("1 - I'm defending.")
+    mygame.Say("I'm defending.")
     return True
     
 def DoRun() -> bool:
-    mygame.Say("1 - I'm running away.")
-    #print("1 - I'm running away.")
+    mygame.Say("I'm running away.")
     return True
 
 if __name__ == "__main__":

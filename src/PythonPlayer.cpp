@@ -23,7 +23,10 @@ void PythonPlayer::UninitializePlayer()
 int PythonPlayer::CreatePlayer(Player *player, const char *scriptName)
 {
     int playerID = -1;
-    PyObject *playerModule = PyImport_ImportModule(scriptName);
+    PyObject *moduleName, *playerModule;
+    moduleName = PyUnicode_DecodeFSDefault(scriptName);
+    playerModule = PyImport_Import(moduleName);
+    Py_DECREF(moduleName);
     if (playerModule == nullptr) {
         std::cout << "Error while importing the " << scriptName << " module\n";
         PyErr_Print();

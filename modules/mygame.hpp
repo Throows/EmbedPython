@@ -4,19 +4,14 @@
 extern "C" {
 #endif
 
-#define FUNC_NB 1
+#define FUNC_NB 0
 
 #ifdef MYGAME_MODULE    // While Compiling the module
-#include "PythonPlayer.hpp"
-
-static void RegisterPlayers(PythonPlayer *players);
-static void Say(const char *msg);
 
 #else                   // While importing the module
-
 static void **Pymygame_API;
 
-#define RegisterPlayers (*(void (*)(int))Pymygame_API[0])
+//#define SetAppInstance (*(void (*)(Application *)) Pymygame_API[0])
 
 static int import_mygame(void)
 {
