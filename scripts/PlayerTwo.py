@@ -1,6 +1,7 @@
 import sys
 import mygame
 import random
+import time
 
 def OnCreatePlayer():
     PlayerData = {
@@ -17,6 +18,7 @@ def OnChoseAction() -> int:
     return randAction
     
 def DoNothing() -> bool:
+    #time.sleep(5)
     #mygame.Say("2 - I'm doing nothing.")
     print("2 - I'm doing nothing.")
     return True

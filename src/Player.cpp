@@ -31,18 +31,18 @@ void Player::Play(Action action, Player *player)
     switch (action)
     {
     case Action::ATTACK:
-        this->m_pythonPlayer->Attack(player);
+        this->m_pythonPlayer->Attack(this);
         player->SetHealth(player->GetHealth() - this->m_damage);
         break;
     case Action::DEFEND:
-        this->m_pythonPlayer->Defend(player);
+        this->m_pythonPlayer->Defend(this);
         player->SetHealth(player->GetHealth() + player->GetDamage() - this->m_armor);
         break;
     case Action::RUN:
-        this->m_pythonPlayer->Run(player);
+        this->m_pythonPlayer->Run(this);
         break;
     default:
-        this->m_pythonPlayer->Nothing(player);
+        this->m_pythonPlayer->Nothing(this);
         break;
     }
 }

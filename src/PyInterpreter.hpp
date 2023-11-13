@@ -13,8 +13,9 @@ public:
     void Initialize();
     void Uninitialize();
 
-    void LoadCModule(PyObject *module, const char *moduleName);
-    void LoadScriptModule(PyObject *module, const char *moduleName);
+    // scope issue i gess ? 
+    //void LoadCModule(PyObject *module, const char *moduleName);
+    //void LoadScriptModule(PyObject *module, const char *moduleName);
 
 private:
     const char *m_scriptsPath;

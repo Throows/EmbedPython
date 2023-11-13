@@ -15,9 +15,9 @@ void PythonPlayer::SetupPlayer()
 
 void PythonPlayer::UninitializePlayer()
 {
-    for (auto &player : this->m_playersObject) {
-        Py_DECREF(player);
-    }
+   Py_CLEAR(this->m_playersObject.at(0));
+   Py_CLEAR(this->m_playersObject.at(1));
+   this->m_playersObject.clear();
 }
 
 int PythonPlayer::CreatePlayer(Player *player, const char *scriptName)
@@ -29,7 +29,7 @@ int PythonPlayer::CreatePlayer(Player *player, const char *scriptName)
         PyErr_Print();
         return playerID;
     }
-
+    Py_INCREF(playerModule);
     this->m_playersObject.push_back(playerModule);
     playerID = this->m_playersObject.size() - 1;
     return playerID;
@@ -127,23 +127,23 @@ void PythonPlayer::Run(Player *player)
     int playerID = player->GetPlayerID();
     if (playerID == -1) return;
 
-    PyObject *runFunc, *runkResult;
+    PyObject *runFunc, *runResult;
     runFunc = PyObject_GetAttrString(this->m_playersObject[playerID], "DoRun");
     if (runFunc != nullptr) {
-        runkResult = PyObject_CallObject(runFunc, NULL);
-        if (runkResult != nullptr) {
-            if (PyBool_Check(runkResult)) {
-                bool succed = PyLong_AsLong(runkResult);
+        runResult = PyObject_CallObject(runFunc, NULL);
+        if (runResult != nullptr) {
+            if (PyBool_Check(runResult)) {
+                bool succed = PyLong_AsLong(runResult);
             } else {
                 std::cout << "Error while getting the Run function\n";
                 PyErr_Print();
             }
-            Py_DECREF(runkResult);
+            Py_DECREF(runResult);
         } else {
             std::cout << "Error while getting the Run function\n";
             PyErr_Print();
         }
-        Py_DECREF(runkResult);
+        Py_DECREF(runFunc);
     } else {
         std::cout << "Error while getting the Run function\n";
         PyErr_Print();
@@ -198,10 +198,9 @@ void PythonPlayer::SetPlayerData(Player *player)
                 else if (keyStr == "Armor")     player->SetArmor(PyLong_AsLong(value));
                 else if (keyStr == "Speed")     player->SetSpeed(PyLong_AsLong(value));
                 else std::cout << "Error while getting the " << keyStr << " attribute\n";
-
-                Py_DECREF(key);
-                Py_DECREF(value);
             }
+            Py_XDECREF(key);
+            Py_XDECREF(value);
             Py_DECREF(playerStatDict);
         } else {
             std::cout << "Error while getting the PlayerData function\n";
