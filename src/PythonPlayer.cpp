@@ -185,33 +185,26 @@ void PythonPlayer::SetPlayerData(Player *player)
 {
     int playerID = player->GetPlayerID();
     if (playerID == -1) return;
-    PyObject *playerStatFunc, *playerStatDict;
-    playerStatFunc = PyObject_GetAttrString(this->m_playersObject[playerID], "OnCreatePlayer");
-    if (playerStatFunc && PyCallable_Check(playerStatFunc)) {
-        playerStatDict = PyObject_CallObject(playerStatFunc, NULL);
-        if (playerStatDict != nullptr) {
-            PyObject *key, *value;
-            Py_ssize_t pos = 0;
+    PyObject *playerStatDict;
+    playerStatDict = PyObject_GetAttrString(this->m_playersObject[playerID], "PlayerData");
+    if (playerStatDict && PyDict_Check(playerStatDict)) {
+        PyObject *key, *value;
+        Py_ssize_t pos = 0;
 
-            while (PyDict_Next(playerStatDict, &pos, &key, &value)) {
-                std::string keyStr = PyUnicode_AsUTF8(key);
-                if (keyStr == "Name")           player->SetName(PyUnicode_AsUTF8(value));
-                else if (keyStr == "Health")    player->SetHealth(PyLong_AsLong(value));
-                else if (keyStr == "Damage")    player->SetDamage(PyLong_AsLong(value));
-                else if (keyStr == "Armor")     player->SetArmor(PyLong_AsLong(value));
-                else if (keyStr == "Speed")     player->SetSpeed(PyLong_AsLong(value));
-                else std::cout << "Error while getting the " << keyStr << " attribute\n";
-            }
-            Py_XDECREF(key);
-            Py_XDECREF(value);
-            Py_DECREF(playerStatDict);
-        } else {
-            std::cout << "Error while getting the PlayerData function\n";
-            PyErr_Print();
+        while (PyDict_Next(playerStatDict, &pos, &key, &value)) {
+            std::string keyStr = PyUnicode_AsUTF8(key);
+            if (keyStr == "Name")           player->SetName(PyUnicode_AsUTF8(value));
+            else if (keyStr == "Health")    player->SetHealth(PyLong_AsLong(value));
+            else if (keyStr == "Damage")    player->SetDamage(PyLong_AsLong(value));
+            else if (keyStr == "Armor")     player->SetArmor(PyLong_AsLong(value));
+            else if (keyStr == "Speed")     player->SetSpeed(PyLong_AsLong(value));
+            else std::cout << "Error while getting the " << keyStr << " attribute\n";
         }
+        Py_XDECREF(key);
+        Py_XDECREF(value);
+        Py_DECREF(playerStatDict);
     } else {
         std::cout << "Error while getting the PlayerData attribute\n";
         PyErr_Print();
     }
-    Py_XDECREF(playerStatFunc);
 }

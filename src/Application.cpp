@@ -16,9 +16,9 @@ Application::~Application()
 void Application::Initialize()
 {
     interpPython.Initialize();
-    players.push_back(new Player("PlayerOne"));
+    players.push_back(new Player("Plugins.PlayerOne"));
     players[0]->SetupPlayer(&pythonPlayer);
-    players.push_back(new Player("PlayerTwo"));
+    players.push_back(new Player("Plugins.PlayerTwo"));
     players[1]->SetupPlayer(&pythonPlayer);
 }
 

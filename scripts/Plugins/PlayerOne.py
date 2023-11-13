@@ -9,9 +9,6 @@ PlayerData = {
     "Speed" : 420,
 }
 
-def OnCreatePlayer():
-    return PlayerData
-
 def OnChoseAction() -> int:
     return mygame.GetRandomInt()
     
