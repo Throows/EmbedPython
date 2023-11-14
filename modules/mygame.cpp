@@ -10,7 +10,6 @@ extern "C" {
 
 #define MYGAME_MODULE
 #include "mygame.hpp"
-#include "Application.hpp"
 
 #define VERSION "0.0.1"
 

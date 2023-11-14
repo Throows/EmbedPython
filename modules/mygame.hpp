@@ -7,6 +7,7 @@ extern "C" {
 #define FUNC_NB 0
 
 #ifdef MYGAME_MODULE    // While Compiling the module
+#include "Application.hpp"
 
 #else                   // While importing the module
 static void **Pymygame_API;
